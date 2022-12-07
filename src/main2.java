@@ -14,6 +14,8 @@ public class main2 extends DefaultHandler {
     List<Texto> textos=new ArrayList<>();
 
     Texto texto= new Texto();
+    boolean estaEnTexto;
+    StringBuilder escritor= new StringBuilder();
 
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -60,24 +62,28 @@ public class main2 extends DefaultHandler {
             lineas.add(l);
         }
         if (qName.equalsIgnoreCase("text")){
+            estaEnTexto=true;
             texto=new Texto();
             texto.setX(Double.parseDouble(attributes.getValue("x")));
             texto.setY(Double.parseDouble(attributes.getValue("y")));
             texto.setFontsize(Double.parseDouble(attributes.getValue("font-size")));
             texto.setFontfamily(attributes.getValue("font-family,"));
             textos.add(texto);
+
         }
 
 
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
-
+        estaEnTexto=false;
+        texto.setTexto(escritor.toString());
+        escritor=new StringBuilder();
     }
 
     @Override
     public void characters(char ch[], int start, int length) throws SAXException {
-        texto.setTexto(new String(ch));
+        escritor.append(ch,start,length);
     }
 
     public List<Rectangulo> getRectangulos() {
